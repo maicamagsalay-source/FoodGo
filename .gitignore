@@ -56,3 +56,6 @@ build/
 node_modules/
 .idea/
 .vscode/
+# Keep web build for GitHub Pages
+build/*
+!build/web/
