@@ -47,7 +47,26 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.only(top: 12, bottom: 8),
         child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
       ),
-      ...foods.map((f) => FoodCard(f)),
+      LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
+          final columns = width >= 1080
+              ? 4
+              : width >= 820
+                  ? 3
+                  : width >= 560
+                      ? 2
+                      : 1;
+          const spacing = 12.0;
+          final cardWidth = (width - spacing * (columns - 1)) / columns;
+          return Wrap(
+            spacing: spacing,
+            children: foods
+                .map((food) => SizedBox(width: cardWidth, child: FoodCard(food)))
+                .toList(),
+          );
+        },
+      ),
     ]);
   }
 
@@ -113,23 +132,46 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Align(
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 980),
+          constraints: const BoxConstraints(maxWidth: 1220),
           child: ListView(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.sizeOf(context).width >= 850 ? 28 : 16,
+              vertical: 20,
+            ),
             children: [
-              Text('Good day, ${firstName.isEmpty ? 'Foodie' : firstName}!',
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 12),
-              GestureDetector(
-                onTap: widget.onSearchTap,
-                child: AbsorbPointer(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                        hintText: 'What are you craving?', prefixIcon: Icon(Icons.search)),
-                  ),
-                ),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final greeting = Text(
+                    'Good day, ${firstName.isEmpty ? 'Foodie' : firstName}!',
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  );
+                  final search = GestureDetector(
+                    onTap: widget.onSearchTap,
+                    child: AbsorbPointer(
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          hintText: 'What are you craving?',
+                          prefixIcon: Icon(Icons.search),
+                        ),
+                      ),
+                    ),
+                  );
+                  if (constraints.maxWidth >= 700) {
+                    return Row(
+                      children: [
+                        Expanded(child: greeting),
+                        const SizedBox(width: 24),
+                        SizedBox(width: constraints.maxWidth * 0.48, child: search),
+                      ],
+                    );
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [greeting, const SizedBox(height: 12), search],
+                  );
+                },
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               SizedBox(
                 height: 40,
                 child: ListView(scrollDirection: Axis.horizontal, children: [

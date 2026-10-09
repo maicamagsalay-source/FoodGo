@@ -20,6 +20,11 @@ Future<void> openPayment(int orderId) async {
   if (!ok) throw Exception('Could not open the payment page');
 }
 
+/// Cancels an unpaid order that has not started being prepared.
+Future<void> cancelOrder(int orderId) async {
+  await db.rpc('cancel_my_order', params: {'p_order_id': orderId});
+}
+
 /// A dynamic QR Ph code: exact amount, single use.
 class QrPayment {
   final Uint8List bytes;

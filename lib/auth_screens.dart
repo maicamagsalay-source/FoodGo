@@ -74,59 +74,68 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _form,
-              child: Column(
-                children: [
-                  Icon(Icons.delivery_dining, size: 72, color: primary),
-                  const Text('Lamón', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                  const Text('Welcome back! Log in to order.'),
-                  const SizedBox(height: 28),
-                  TextFormField(
-                    controller: _email,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.email_outlined)),
-                    validator: (v) => (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
-                  ),
-                  const SizedBox(height: 14),
-                  TextFormField(
-                    controller: _pw,
-                    obscureText: _hide,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(_hide ? Icons.visibility_off : Icons.visibility),
-                        onPressed: () => setState(() => _hide = !_hide),
-                      ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(28),
+                  child: Form(
+                    key: _form,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.delivery_dining, size: 72, color: primary),
+                        const Text('Lamón', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        const Text('Welcome back! Log in to order.'),
+                        const SizedBox(height: 28),
+                        TextFormField(
+                          controller: _email,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.email_outlined)),
+                          validator: (v) => (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
+                        ),
+                        const SizedBox(height: 14),
+                        TextFormField(
+                          controller: _pw,
+                          obscureText: _hide,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            suffixIcon: IconButton(
+                              icon: Icon(_hide ? Icons.visibility_off : Icons.visibility),
+                              onPressed: () => setState(() => _hide = !_hide),
+                            ),
+                          ),
+                          validator: (v) => (v == null || v.isEmpty) ? 'Enter your password' : null,
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(onPressed: _forgot, child: const Text('Forgot Password?')),
+                        ),
+                        const SizedBox(height: 4),
+                        SizedBox(
+                          width: double.infinity,
+                          child: FilledButton(
+                            onPressed: _loading ? null : _login,
+                            child: _loading
+                                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                                : const Text('Login'),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(minimumSize: const Size(0, 48)),
+                            onPressed: () => Navigator.push(
+                                context, MaterialPageRoute(builder: (_) => const RegisterScreen())),
+                            child: const Text('Create Account'),
+                          ),
+                        ),
+                      ],
                     ),
-                    validator: (v) => (v == null || v.isEmpty) ? 'Enter your password' : null,
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(onPressed: _forgot, child: const Text('Forgot Password?')),
-                  ),
-                  const SizedBox(height: 4),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: _loading ? null : _login,
-                      child: _loading
-                          ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                          : const Text('Login'),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(minimumSize: const Size(0, 48)),
-                      onPressed: () => Navigator.push(
-                          context, MaterialPageRoute(builder: (_) => const RegisterScreen())),
-                      child: const Text('Create Account'),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -189,33 +198,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Create Account')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _form,
-          child: Column(children: [
-            _field(_name, 'Full Name', Icons.person_outline),
-            _field(_email, 'Email', Icons.email_outlined,
-                type: TextInputType.emailAddress,
-                validator: (v) => (v == null || !v.contains('@')) ? 'Enter a valid email' : null),
-            _field(_phone, 'Phone Number', Icons.phone_outlined, type: TextInputType.phone),
-            _field(_pw, 'Password', Icons.lock_outline,
-                obscure: true,
-                validator: (v) => (v == null || v.length < 6) ? 'At least 6 characters' : null),
-            _field(_pw2, 'Confirm Password', Icons.lock_outline,
-                obscure: true,
-                validator: (v) => v != _pw.text ? 'Passwords do not match' : null),
-            const SizedBox(height: 6),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: _loading ? null : _register,
-                child: _loading
-                    ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                    : const Text('Create Account'),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(28),
+                child: Form(
+                  key: _form,
+                  child: Column(children: [
+                    _field(_name, 'Full Name', Icons.person_outline),
+                    _field(_email, 'Email', Icons.email_outlined,
+                        type: TextInputType.emailAddress,
+                        validator: (v) => (v == null || !v.contains('@')) ? 'Enter a valid email' : null),
+                    _field(_phone, 'Phone Number', Icons.phone_outlined, type: TextInputType.phone),
+                    _field(_pw, 'Password', Icons.lock_outline,
+                        obscure: true,
+                        validator: (v) => (v == null || v.length < 6) ? 'At least 6 characters' : null),
+                    _field(_pw2, 'Confirm Password', Icons.lock_outline,
+                        obscure: true,
+                        validator: (v) => v != _pw.text ? 'Passwords do not match' : null),
+                    const SizedBox(height: 6),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: _loading ? null : _register,
+                        child: _loading
+                            ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                            : const Text('Create Account'),
+                      ),
+                    ),
+                  ]),
+                ),
               ),
             ),
-          ]),
+          ),
         ),
       ),
     );

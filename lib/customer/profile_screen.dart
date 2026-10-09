@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../auth_screens.dart';
 import '../providers.dart';
 import '../widgets.dart';
+import 'about_screen.dart';
 import 'orders_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -58,6 +59,13 @@ class ProfileScreen extends StatelessWidget {
                 context, MaterialPageRoute(builder: (_) => const ChangePasswordScreen())),
           ),
           ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text('About Lamón'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () =>
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())),
+          ),
+          ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
             title: const Text('Logout', style: TextStyle(color: Colors.red)),
             onTap: () async {
@@ -76,7 +84,7 @@ class ProfileScreen extends StatelessWidget {
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
-  @override 
+  @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 

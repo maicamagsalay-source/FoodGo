@@ -18,6 +18,7 @@ State management: **Provider** (simplest option).
 1. Create a project at supabase.com.
 2. SQL Editor → paste and run `supabase/schema.sql` (tables, security rules, order function, image bucket, sample menu).
    If your project already has the schema, run `supabase/add_cash_on_delivery.sql` in the SQL Editor before updating the app.
+   Run `supabase/cancel_order.sql` as well to enable customer cancellations on an existing project.
 3. Project Settings → API: keep the **Project URL** and **publishable (anon) key** handy. Press F5 in VS Code and enter both when prompted. For a terminal run, pass them as Dart defines:
    ```powershell
    flutter run -d chrome --dart-define=SUPABASE_URL=https://YOUR_PROJECT.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY

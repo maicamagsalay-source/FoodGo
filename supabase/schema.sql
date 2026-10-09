@@ -167,6 +167,34 @@ create policy "foods admin" on foods for all using (is_admin()) with check (is_a
 create policy "orders read" on orders for select using (user_id = auth.uid() or is_admin());
 create policy "orders admin update" on orders for update using (is_admin()) with check (is_admin());
 
+-- Customers can cancel only their own unpaid orders before preparation starts.
+create or replace function public.cancel_my_order(p_order_id bigint)
+returns void
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+begin
+  if auth.uid() is null then
+    raise exception 'Not authenticated';
+  end if;
+
+  update public.orders
+  set status = 'cancelled'
+  where id = p_order_id
+    and user_id = auth.uid()
+    and status in ('pending', 'confirmed')
+    and payment_status <> 'paid';
+
+  if not found then
+    raise exception 'Order cannot be cancelled';
+  end if;
+end;
+$$;
+
+revoke all on function public.cancel_my_order(bigint) from public, anon;
+grant execute on function public.cancel_my_order(bigint) to authenticated;
+
 create policy "order_items read" on order_items for select using (
   exists (select 1 from orders o where o.id = order_id and (o.user_id = auth.uid() or is_admin()))
 );

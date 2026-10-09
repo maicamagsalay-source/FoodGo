@@ -85,7 +85,21 @@ class _AdminShellState extends State<AdminShell> {
                     ))
                 .toList(),
           ),
-        Expanded(child: pages[_index]),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isWide ? 24 : 0,
+              vertical: isWide ? 16 : 0,
+            ),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1280),
+                child: pages[_index],
+              ),
+            ),
+          ),
+        ),
       ]),
       bottomNavigationBar: isWide
           ? null

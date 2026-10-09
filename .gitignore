@@ -51,3 +51,8 @@ ios/Flutter/Generated.xcconfig
 ios/Flutter/flutter_export_environment.sh
 foodgo_system.zip
 food_details_screen.zip
+.dart_tool/
+build/
+node_modules/
+.idea/
+.vscode/

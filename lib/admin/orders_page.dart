@@ -171,82 +171,95 @@ class _AdminOrderDetailState extends State<AdminOrderDetail> {
           ? ErrorRetry(_error!, _load)
           : o == null
               ? const Center(child: CircularProgressIndicator())
-              : ListView(padding: const EdgeInsets.all(16), children: [
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        const Text('Customer', style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(o.customerName),
-                        Text(o.phone),
-                        Text(o.address),
-                        const SizedBox(height: 4),
-                        Text(fmtDate(o.createdAt), style: TextStyle(color: Colors.grey.shade600)),
-                      ]),
-                    ),
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        const Text('Items', style: TextStyle(fontWeight: FontWeight.bold)),
-                        ...o.items.map((i) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 2),
-                              child: Row(children: [
-                                Expanded(child: Text('${i.qty} × ${i.name}')),
-                                Text(peso(i.price * i.qty))
-                              ]),
-                            )),
-                        const Divider(),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [const Text('Delivery Fee'), Text(peso(o.deliveryFee))]),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                          const Text('Total', style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text(peso(o.total), style: const TextStyle(fontWeight: FontWeight.bold)),
-                        ]),
-                      ]),
-                    ),
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Row(children: [
-                          const Text('Payment  ', style: TextStyle(fontWeight: FontWeight.bold)),
-                          StatusChip(o.paymentStatus)
-                        ]),
-                        if (_payments.isEmpty) const Text('No payment attempts yet.'),
-                        ..._payments.map((p) => Padding(
-                              padding: const EdgeInsets.only(top: 6),
-                              child: Text(
-                                  '${p.method.toUpperCase()} • ${p.transactionId} • ${cap(p.status)}',
-                                  style: const TextStyle(fontSize: 12)),
-                            )),
-                      ]),
-                    ),
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        const Text('Update order status',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 8,
-                          children: orderStatuses
-                              .map((s) => ChoiceChip(
-                                    label: Text(cap(s)),
-                                    selected: o.status == s,
-                                    onSelected: o.status == s ? null : (_) => _setStatus(s),
-                                  ))
-                              .toList(),
+              : Align(
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1000),
+                    child: ListView(
+                      padding: const EdgeInsets.all(24),
+                      children: [
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              const Text('Customer', style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text(o.customerName),
+                              Text(o.phone),
+                              Text(o.address),
+                              const SizedBox(height: 4),
+                              Text(fmtDate(o.createdAt),
+                                  style: TextStyle(color: Colors.grey.shade600)),
+                            ]),
+                          ),
                         ),
-                      ]),
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              const Text('Items', style: TextStyle(fontWeight: FontWeight.bold)),
+                              ...o.items.map((i) => Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 2),
+                                    child: Row(children: [
+                                      Expanded(child: Text('${i.qty} × ${i.name}')),
+                                      Text(peso(i.price * i.qty))
+                                    ]),
+                                  )),
+                              const Divider(),
+                              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                const Text('Delivery Fee'),
+                                Text(peso(o.deliveryFee))
+                              ]),
+                              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                const Text('Total', style: TextStyle(fontWeight: FontWeight.bold)),
+                                Text(peso(o.total),
+                                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                              ]),
+                            ]),
+                          ),
+                        ),
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              Row(children: [
+                                const Text('Payment  ',
+                                    style: TextStyle(fontWeight: FontWeight.bold)),
+                                StatusChip(o.paymentStatus)
+                              ]),
+                              if (_payments.isEmpty) const Text('No payment attempts yet.'),
+                              ..._payments.map((p) => Padding(
+                                    padding: const EdgeInsets.only(top: 6),
+                                    child: Text(
+                                        '${p.method.toUpperCase()} • ${p.transactionId} • ${cap(p.status)}',
+                                        style: const TextStyle(fontSize: 12)),
+                                  )),
+                            ]),
+                          ),
+                        ),
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              const Text('Update order status',
+                                  style: TextStyle(fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 8),
+                              Wrap(
+                                spacing: 8,
+                                children: orderStatuses
+                                    .map((s) => ChoiceChip(
+                                          label: Text(cap(s)),
+                                          selected: o.status == s,
+                                          onSelected: o.status == s ? null : (_) => _setStatus(s),
+                                        ))
+                                    .toList(),
+                              ),
+                            ]),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ]),
+                ),
     );
   }
 }
